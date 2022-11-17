@@ -1,4 +1,4 @@
-Origen;Destino;Distancia(Km);Tiempo (min)
+ORIGEN;DESTINO;DISTANCIA;TIEMPO
 Piraeus;Faliro;1.94;3
 Faliro;Moschato;1.50;3
 Moschato;Kallithea;1.65;2
