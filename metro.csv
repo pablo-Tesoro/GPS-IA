@@ -1,6 +1,6 @@
 ORIGEN;DESTINO;DISTANCIA;TIEMPO
-Piraeus;Faliro;1.94;3
-Faliro;Moschato;1.50;3
+Piraeus;Faliro;2.2;3
+Faliro;Moschato;1.90;3
 Moschato;Kallithea;1.65;2
 Kallithea;Tavros;0.65;1
 Tavros;Petralona;0.81;2
@@ -22,7 +22,7 @@ Irini;Neratziotissa;1.04;2
 Neratziotissa;Maroussi;1.67;3
 Maroussi;KAT;1.16;2
 KAT;Kifissia;1.05;3
-Aghios Dimitrios · Alexandros Panagoulis;Dafni;1.02;1
+Aghios Dimitrios;Dafni;1.02;1
 Dafni;Aghios Ioannis;0.86;2
 Aghios Ioannis;Neos Kosmos;0.56;1
 Neos Kosmos;Sygrou-Fix;1.16;1

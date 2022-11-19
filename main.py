@@ -12,14 +12,14 @@ def leer(data):
             f.close()
         return coords
 
-data = pd.read_csv(os.path.abspath("Pruebas\metro.csv"), sep=';', index_col=False, encoding='cp1252')
+data = pd.read_csv(os.path.abspath("metro.csv"), sep=';', index_col=False, encoding='cp1252')
 
 A = nx.Graph()
 
 G = nx.from_pandas_edgelist(data, source='ORIGEN', target='DESTINO', edge_attr=['DISTANCIA', 'TIEMPO'])
 
 
-coords = leer(os.path.abspath("Pruebas\Coordenadas.json"))
+coords = leer(os.path.abspath("Coordenadas.json"))
 for x in coords:
     G.nodes[x['Station']]['Coordenadas'] = [x['Latitude'], x['Longitude']]
     G.nodes[x['Station']]['Linea'] = x['Line']

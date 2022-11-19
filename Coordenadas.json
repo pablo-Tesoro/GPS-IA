@@ -2,291 +2,349 @@
 	{
 		"Station": "Piraeus",
 		"Latitude": 37.948116,
-		"Length": 23.643272
+		"Longitude": 23.643272,
+		"Line": 1
 	},
 	{
 		"Station": "Faliro",
 		"Latitude": 37.944988,
-		"Length": 23.665225
+		"Longitude": 23.665225,
+		"Line": 1
 	},
 	{
 		"Station": "Moschato",
 		"Latitude": 37.955060,
-		"Length": 23.679700
+		"Longitude": 23.679700,
+		"Line": 1
 	},
 	{
 		"Station": "Kallithea",
 		"Latitude": 37.960405,
-		"Length": 23.697332
+		"Longitude": 23.697332,
+		"Line": 1
 	},
 	{
 		"Station": "Tavros",
 		"Latitude": 37.962466,
-		"Length": 23.703392
+		"Longitude": 23.703392,
+		"Line": 1
 	},
 	{
-		"Station": "PetraLengtha",
+		"Station": "Petralona",
 		"Latitude": 37.968626,
-		"Length": 23.709244
+		"Longitude": 23.709244,
+		"Line": 1
 	},
 	{
 		"Station": "Thissio",
 		"Latitude": 37.976709,
-		"Length": 23.720706
+		"Longitude": 23.720706,
+		"Line": 1
 	},
 	{
-		"Station": "Monastiraki-Verde",
+		"Station": "Monastiraki-1",
 		"Latitude": 37.976085,
-		"Length": 23.725626
+		"Longitude": 23.725626,
+		"Line": 1
 	},
 	{
-		"Station": "Omonia-Verde",
+		"Station": "Omonia-1",
 		"Latitude": 37.984183,
-		"Length": 23.728695
+		"Longitude": 23.728695,
+		"Line": 1
 	},
 	{
 		"Station": "Victoria",
 		"Latitude": 37.993077,
-		"Length": 23.730286
+		"Longitude": 23.730286,
+		"Line": 1
 	},
 	{
-		"Station": "Attiki-Verde",
+		"Station": "Attiki-1",
 		"Latitude": 37.999296,
-		"Length": 23.722099
+		"Longitude": 23.722099,
+		"Line": 1
 	},
 	{
 		"Station": "Aghios Nikolaos",
 		"Latitude": 38.006921,
-		"Length": 23.727711
+		"Longitude": 23.727711,
+		"Line": 1
 	},
 	{
 		"Station": "Kato Patissia",
 		"Latitude": 38.011577,
-		"Length": 23.728792
+		"Longitude": 23.728792,
+		"Line": 1
 	},
 	{
 		"Station": "Aghios Eleftherios",
 		"Latitude": 38.020114,
-		"Length": 23.731858
+		"Longitude": 23.731858,
+		"Line": 1
 	},
 	{
 		"Station": "Ano Patissia",
 		"Latitude": 38.023797,
-		"Length": 23.735964
+		"Longitude": 23.735964,
+		"Line": 1
 	},
 	{
 		"Station": "Perissos",
 		"Latitude": 38.032853,
-		"Length": 23.744629
+		"Longitude": 23.744629,
+		"Line": 1
 	},
 	{
 		"Station": "Pefkakia",
 		"Latitude": 38.037146,
-		"Length": 23.750170
+		"Longitude": 23.750170,
+		"Line": 1
 	},
 	{
 		"Station": "Nea Ionia",
 		"Latitude": 38.041614,
-		"Length": 23.755197
+		"Longitude": 23.755197,
+		"Line": 1
 	},
 	{
 		"Station": "Iraklio",
 		"Latitude": 38.046253,
-		"Length": 23.766074
+		"Longitude": 23.766074,
+		"Line": 1
 	},
 	{
 		"Station": "Irini",
 		"Latitude": 38.043732,
-		"Length": 23.782722
+		"Longitude": 23.782722,
+		"Line": 1
 	},
 	{
 		"Station": "Neratziotissa",
 		"Latitude": 38.044805,
-		"Length": 23.792862
+		"Longitude": 23.792862,
+		"Line": 1
 	},
 	{
 		"Station": "Maroussi",
 		"Latitude": 38.056182,
-		"Length": 23.804979
+		"Longitude": 23.804979,
+		"Line": 1
 	},
 	{
 		"Station": "KAT",
 		"Latitude": 38.065921,
-		"Length": 23.804028
+		"Longitude": 23.804028,
+		"Line": 1
 	},
 	{
 		"Station": "Kifissia",
 		"Latitude": 38.073682,
-		"Length": 23.808310
+		"Longitude": 23.808310,
+		"Line": 1
 	},
 	{
-		"Station": "Aghios Dimitrios · Alexandros Panagoulis",
+		"Station": "Aghios Dimitrios",
 		"Latitude": 37.940484,
-		"Length": 23.740713
+		"Longitude": 23.740713,
+		"Line": 2
 	},
 	{
 		"Station": "Dafni",
 		"Latitude": 37.949202,
-		"Length": 23.737224
+		"Longitude": 23.737224,
+		"Line": 2
 	},
 	{
 		"Station": "Aghios Ioannis",
 		"Latitude": 37.956629,
-		"Length": 23.734684
+		"Longitude": 23.734684,
+		"Line": 2
 	},
 	{
 		"Station": "Neos Kosmos",
 		"Latitude": 37.957597,
-		"Length": 23.728466
+		"Longitude": 23.728466,
+		"Line": 2
 	},
 	{
 		"Station": "Sygrou-Fix",
 		"Latitude": 37.964294,
-		"Length": 23.726567
+		"Longitude": 23.726567,
+		"Line": 2
 	},
 	{
 		"Station": "Akropoli",
 		"Latitude": 37.968733,
-		"Length": 23.729601
+		"Longitude": 23.729601,
+		"Line": 2
 	},
 	{
-		"Station": "Syntagma-Rojo",
+		"Station": "Syntagma-2",
 		"Latitude": 37.975085,
-		"Length": 23.735685
+		"Longitude": 23.735685,
+		"Line": 2
 	},
 	{
 		"Station": "Panepistimio",
 		"Latitude": 37.980387,
-		"Length": 23.733051
+		"Longitude": 23.733051,
+		"Line": 2
 	},
 	{
-		"Station": "Omonia-Rojo",
+		"Station": "Omonia-2",
 		"Latitude": 37.984183,
-		"Length": 23.728695
+		"Longitude": 23.728695,
+		"Line": 2
 	},
 	{
 		"Station": "Metaxourghio",
 		"Latitude": 37.986274,
-		"Length": 23.721142
+		"Longitude": 23.721142,
+		"Line": 2
 	},
 	{
 		"Station": "Larissa Station",
 		"Latitude": 37.991996,
-		"Length": 23.721102
+		"Longitude": 23.721102,
+		"Line": 2
 	},
 	{
-		"Station": "Attiki-Rojo",
+		"Station": "Attiki-2",
 		"Latitude": 37.999296,
-		"Length": 23.722099
+		"Longitude": 23.722099,
+		"Line": 2
 	},
 	{
 		"Station": "Sepolia",
 		"Latitude": 38.002647,
-		"Length": 23.713538
+		"Longitude": 23.713538,
+		"Line": 2
 	},
 	{
 		"Station": "Aghios Antonios",
 		"Latitude": 38.006662,
-		"Length": 23.699482
+		"Longitude": 23.699482,
+		"Line": 2
 	},
 	{
 		"Station": "Egaleo",
 		"Latitude": 37.991956,
-		"Length": 23.681829
+		"Longitude": 23.681829,
+		"Line": 3
 	},
 	{
 		"Station": "Eleonas",
 		"Latitude": 37.987894,
-		"Length": 23.694177
+		"Longitude": 23.694177,
+		"Line": 3
 	},
 	{
 		"Station": "Kerameikos",
 		"Latitude": 37.978584,
-		"Length": 23.711462
+		"Longitude": 23.711462,
+		"Line": 3
 	},
 	{
-		"Station": "Monastiraki-Azul",
+		"Station": "Monastiraki-3",
 		"Latitude": 37.976085,
-		"Length": 23.725626
+		"Longitude": 23.725626,
+		"Line": 3
 	},
 	{
-		"Station": "Syntagma-Azul",
+		"Station": "Syntagma-3",
 		"Latitude": 37.975085,
-		"Length": 23.735685
+		"Longitude": 23.735685,
+		"Line": 3
 	},
 	{
 		"Station": "Evangelismos",
 		"Latitude": 37.976018,
-		"Length": 23.746627
+		"Longitude": 23.746627,
+		"Line": 3
 	},
 	{
 		"Station": "Megaro Moussikis",
 		"Latitude": 37.979287,
-		"Length": 23.752912
+		"Longitude": 23.752912,
+		"Line": 3
 	},
 	{
 		"Station": "Ambelokipi",
 		"Latitude": 37.987326,
-		"Length": 23.757029
+		"Longitude": 23.757029,
+		"Line": 3
 	},
 	{
 		"Station": "Panormou",
 		"Latitude": 37.993161,
-		"Length": 23.763419
+		"Longitude": 23.763419,
+		"Line": 3
 	},
 	{
 		"Station": "Katehaki",
 		"Latitude": 37.993168,
-		"Length": 23.776152
+		"Longitude": 23.776152,
+		"Line": 3
 	},
 	{
 		"Station": "Ethniki Amyna",
 		"Latitude": 38.000055,
-		"Length": 23.785752
+		"Longitude": 23.785752,
+		"Line": 3
 	},
 	{
 		"Station": "Holargos",
 		"Latitude": 38.004520,
-		"Length": 23.794724
+		"Longitude": 23.794724,
+		"Line": 3
 	},
 	{
 		"Station": "Nomismatokopio",
 		"Latitude": 38.009274,
-		"Length": 23.805667
+		"Longitude": 23.805667,
+		"Line": 3
 	},
 	{
 		"Station": "Aghia Paraskevi",
 		"Latitude": 38.017193,
-		"Length": 23.812321
+		"Longitude": 23.812321,
+		"Line": 3
 	},
 	{
 		"Station": "Halandri",
 		"Latitude": 38.021514,
-		"Length": 23.821225
+		"Longitude": 23.821225,
+		"Line": 3
 	},
 	{
 		"Station": "Doukissis Plakentias",
 		"Latitude": 38.024592,
-		"Length": 23.833041
+		"Longitude": 23.833041,
+		"Line": 3
 	},
 	{
 		"Station": "Pallini",
 		"Latitude": 38.005837,
-		"Length": 23.869586
+		"Longitude": 23.869586,
+		"Line": 3
 	},
 	{
 		"Station": "Paiania-Kantza",
 		"Latitude": 37.984218,
-		"Length": 23.870007
+		"Longitude": 23.870007,
+		"Line": 3
 	},
 	{
 		"Station": "Koropi",
 		"Latitude": 37.913013,
-		"Length": 23.895810
+		"Longitude": 23.895810,
+		"Line": 3
 	},
 	{
 		"Station": "Airport",
 		"Latitude": 37.936920,
-		"Length": 23.944799
+		"Longitude": 23.944799,
+		"Line": 3
 	}
 ]
