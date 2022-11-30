@@ -1,7 +1,4 @@
+from Algoritmo import Alg
 
-import csv 
-btns = []
-with open('coordImg.csv', 'r') as File:  
-    reader =csv.reader(File, delimiter=';')
-    for row in (reader) :
-        print(row)
+al = Alg('Piraeus', 'Aghios Antonios')
+al.main()

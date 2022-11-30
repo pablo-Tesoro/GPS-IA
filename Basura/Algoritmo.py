@@ -2,22 +2,30 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 import math
+import matplotlib.pyplot as plt
+import json
+import os
 
 class Alg():
     
-    listaAbierta = []
-    listaCerrada = []
-    recorrido = []
+
     
-    def __init__(self, G, origen, destino):
+    def __init__(self, origen, destino):
         
-        self.G = G
         self.origen = origen
         self.destino = destino
         self.estacionActual = origen
         self.distancia = 0
         self.tiempomin = 0
+        self.listaAbierta = []
+        self.listaCerrada = []
+        self.recorrido = []
+        self.initGraph()
+        
            
+    def getRecorrido(self):
+        return self.recorrido
+
     def algoritmo(self):
         sucesores = []
         solucionEncontrada = False
@@ -54,6 +62,15 @@ class Alg():
                 self.calF(hijo)
                 self.G.nodes[hijo]['Padre']= padre
 
+    def initGraph(self):
+        data = pd.read_csv(os.path.abspath("metro.csv"), sep=';', index_col=False, encoding='cp1252')
+
+        self.G = nx.from_pandas_edgelist(data, source='ORIGEN', target='DESTINO', edge_attr=['DISTANCIA', 'TIEMPO'])
+
+        coords = self.leer(os.path.abspath("Coordenadas.json"))
+        for x in coords:
+            self.G.nodes[x['Station']]['Coordenadas'] = [x['Latitude'], x['Longitude']]
+            self.G.nodes[x['Station']]['Linea'] = x['Line']
 
     def fheuristica(self, estacion) -> int:
         
@@ -103,6 +120,15 @@ class Alg():
         while(x <len(self.recorrido)):
             self.tiempomin += self.G.edges[self.recorrido[x-1],self.recorrido[x]]['TIEMPO'] 
             x += 1
+            
+    def leer(self, data):
+                with open (data, 'r') as f:
+                    coords = json.load(f)
+                    f.close()
+                return coords
 
     def main(self):
-        pass
+
+        self.algoritmo()
+        self.camino()
+        

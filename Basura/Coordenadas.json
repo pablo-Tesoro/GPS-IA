@@ -42,13 +42,13 @@
 		"Line": 1
 	},
 	{
-		"Station": "Monastiraki-1",
+		"Station": "Monastiraki",
 		"Latitude": 37.976085,
 		"Longitude": 23.725626,
 		"Line": 1
 	},
 	{
-		"Station": "Omonia-1",
+		"Station": "Omonia",
 		"Latitude": 37.984183,
 		"Longitude": 23.728695,
 		"Line": 1
@@ -57,12 +57,6 @@
 		"Station": "Victoria",
 		"Latitude": 37.993077,
 		"Longitude": 23.730286,
-		"Line": 1
-	},
-	{
-		"Station": "Attiki-1",
-		"Latitude": 37.999296,
-		"Longitude": 23.722099,
 		"Line": 1
 	},
 	{
@@ -180,21 +174,9 @@
 		"Line": 2
 	},
 	{
-		"Station": "Syntagma-2",
-		"Latitude": 37.975085,
-		"Longitude": 23.735685,
-		"Line": 2
-	},
-	{
 		"Station": "Panepistimio",
 		"Latitude": 37.980387,
 		"Longitude": 23.733051,
-		"Line": 2
-	},
-	{
-		"Station": "Omonia-2",
-		"Latitude": 37.984183,
-		"Longitude": 23.728695,
 		"Line": 2
 	},
 	{
@@ -210,7 +192,7 @@
 		"Line": 2
 	},
 	{
-		"Station": "Attiki-2",
+		"Station": "Attiki",
 		"Latitude": 37.999296,
 		"Longitude": 23.722099,
 		"Line": 2
@@ -246,13 +228,7 @@
 		"Line": 3
 	},
 	{
-		"Station": "Monastiraki-3",
-		"Latitude": 37.976085,
-		"Longitude": 23.725626,
-		"Line": 3
-	},
-	{
-		"Station": "Syntagma-3",
+		"Station": "Syntagma",
 		"Latitude": 37.975085,
 		"Longitude": 23.735685,
 		"Line": 3
