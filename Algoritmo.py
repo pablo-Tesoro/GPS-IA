@@ -2,22 +2,29 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 import math
+import matplotlib.pyplot as plt
+import json
+import os
 
 class Alg():
     
-    listaAbierta = []
-    listaCerrada = []
-    recorrido = []
     
-    def __init__(self, G, origen, destino):
-        
-        self.G = G
+    def __init__(self, origen, destino, criterio):
+        self.criterio= criterio
         self.origen = origen
         self.destino = destino
         self.estacionActual = origen
-        self.distancia = 0
-        self.tiempomin = 0
+        self.principal = 0
+        self.secundario = 0
+        self.listaAbierta = []
+        self.listaCerrada = []
+        self.recorrido = []
+        self.initGraph()
+        
            
+    def getRecorrido(self):
+        return self.recorrido
+
     def algoritmo(self):
         sucesores = []
         solucionEncontrada = False
@@ -44,16 +51,25 @@ class Alg():
     def tratarHijo(self, hijo, padre):
         if((hijo in self.listaCerrada)== False):
             if((hijo in self.listaAbierta)== True):
-                if(self.G.nodes[hijo]['G'] > (self.G.nodes[padre]['G'] + self.G.edges[hijo,padre]['DISTANCIA'])):
-                   self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre]['DISTANCIA']
+                if(self.G.nodes[hijo]['G'] > (self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio])):
+                   self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio]
                    self.calF(hijo)
                    self.G.nodes[hijo]['Padre']= padre
             else:
                 self.listaAbierta.append(hijo)
-                self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre]['DISTANCIA']
+                self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio]
                 self.calF(hijo)
                 self.G.nodes[hijo]['Padre']= padre
 
+    def initGraph(self):
+        data = pd.read_csv(os.path.abspath("metro.csv"), sep=';', index_col=False, encoding='cp1252')
+
+        self.G = nx.from_pandas_edgelist(data, source='ORIGEN', target='DESTINO', edge_attr=['DISTANCIA', 'TIEMPO'])
+
+        coords = self.leer(os.path.abspath("Coordenadas.json"))
+        for x in coords:
+            self.G.nodes[x['Station']]['Coordenadas'] = [x['Latitude'], x['Longitude']]
+            self.G.nodes[x['Station']]['Linea'] = x['Line']
 
     def fheuristica(self, estacion) -> int:
         
@@ -67,7 +83,10 @@ class Alg():
         difLong = lon2 - lon1
         a = np.sin(difLat/2) ** 2 + np.cos(lat2) * np.cos(lat1) * np.sin(difLong/2) ** 2
         c = 2 * np.arctan2(math.sqrt(a), math.sqrt(1-a))
-        return c*r
+        if(self.criterio == 'DISTANCIA'):
+            return c*r
+        elif (self.criterio == 'TIEMPO'):
+            return (c*r)/1.3 #Velocidad media metro de atenas
     
     def calF(self, estacion):
         self.G.nodes[estacion]['F'] = self.G.nodes[estacion]['G'] + self.fheuristica(estacion)
@@ -93,16 +112,31 @@ class Alg():
         aux=self.listaCerrada.index(self.estacionActual)
         estacion = self.listaCerrada[aux]
         self.recorrido.insert(0,estacion)
-        self.distancia = round(self.G.nodes[estacion]['G'],4)
+        self.principal = round(self.G.nodes[estacion]['G'],4)
         while(self.G.nodes[estacion]['Padre'] != None):
             self.recorrido.insert(0,self.G.nodes[estacion]['Padre'])
             estacion = self.G.nodes[estacion]['Padre']
     
-    def tiempo(self):
+    def otrosCriterios(self):
         x=1
-        while(x <len(self.recorrido)):
-            self.tiempomin += self.G.edges[self.recorrido[x-1],self.recorrido[x]]['TIEMPO'] 
-            x += 1
+        if(self.criterio == 'TIEMPO'):
+            while(x <len(self.recorrido)):
+                self.secundario += self.G.edges[self.recorrido[x-1],self.recorrido[x]]['DISTANCIA']
+                self.secundario = round(self.secundario,4) 
+                x += 1
+        else:
+             while(x <len(self.recorrido)):
+                self.secundario += self.G.edges[self.recorrido[x-1],self.recorrido[x]]['TIEMPO'] 
+                x += 1
+            
+    def leer(self, data):
+                with open (data, 'r') as f:
+                    coords = json.load(f)
+                    f.close()
+                return coords
 
     def main(self):
-        pass
+
+        self.algoritmo()
+        self.camino()   
+        self.otrosCriterios()
