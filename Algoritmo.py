@@ -5,10 +5,9 @@ import math
 import matplotlib.pyplot as plt
 import json
 import os
+import csv
 
 class Alg():
-    
-    
     def __init__(self, origen, destino, criterio):
         self.criterio= criterio
         self.origen = origen
@@ -20,10 +19,51 @@ class Alg():
         self.listaCerrada = []
         self.recorrido = []
         self.initGraph()
+        self.lineas = []
+        self.line = []
         
            
     def getRecorrido(self):
         return self.recorrido
+    
+    def getLineas(self):
+        for x in self.recorrido:
+            self.lineas.append(self.G.nodes[x]['Linea'])
+        return self.lineas
+    
+    def transbordosAux(self):
+        transbordosAux = []
+        with open('transbordos.csv', newline='') as File:  
+            reader = csv.reader(File,delimiter=';')
+            for row in reader :
+                transbordosAux.append(row)
+        return transbordosAux
+    
+    def getTransbordos(self):
+        transbordos = []
+        transbordosAux = self.transbordosAux()
+        for x in range (len(self.lineas)):
+            if self.lineas[x] == 0:
+                if x > 0 and self.lineas[x-1] == 0:
+                    for y in transbordosAux:
+                        if self.recorrido[x-1] == y[0] and self.recorrido[x] == y[1]:
+                            self.line.append((int)(y[2]))
+                elif x > 0 and self.lineas[x-1] != 0:
+                    self.line.append(self.lineas[x-1])
+                        
+                else:
+                    if self.lineas[x+1] == 0:
+                        for y in transbordosAux:
+                            if self.recorrido[x+1] == y[0] and self.recorrido[x] == y[1]:
+                                self.line.append((int)(y[2]))
+                    else:
+                        self.line.append(self.lineas[x+1])
+            else:
+                self.line.append(self.lineas[x])
+        for x in range(len(self.line)-1):
+                if(self.line[x]!=self.line[x+1]):
+                    transbordos.append(self.recorrido[x])         
+        return transbordos
 
     def algoritmo(self):
         sucesores = []
