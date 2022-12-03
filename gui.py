@@ -78,7 +78,7 @@ def showPath(): #Función recursiva para dibujar el camino
         contLineas = 0
         destino.set("---Seleccionar Destino---") 
         origen.set("---Seleccionar Origen---") #Reseteamos origen y destino
-        fin = Label(frameInfo, text="Buen Viaje!", background="black", font=("Copperplate Gothic Bold", 15))
+        fin = Label(frameInfo, text="¡Buen Viaje!", background="black", font=("Copperplate Gothic Bold", 15))
         fin.configure(fg="white")
         fin.place(x=80, y=670)
         listbox.insert(contaador, al.recorrido[contaador])# Añadimos la ultima estación del recorrido
