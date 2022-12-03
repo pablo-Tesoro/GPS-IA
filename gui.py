@@ -112,7 +112,12 @@ def showPath(): #Función recursiva para dibujar el camino
             else:
                 canvas.create_oval(coordIn[0]-8, coordIn[1]-8, coordIn[0]+8, coordIn[1]+8, fill="blue") #Linea 3
         else:
-            canvas.create_oval(coordIn[0]-8, coordIn[1]-8, coordIn[0]+8, coordIn[1]+8, fill="white")#Si no es trasbordo pintamos el punto de blanco
+            if lineasUsadas[contLineas]==1:
+                canvas.create_oval(coordIn[0]-8, coordIn[1]-8, coordIn[0]+8, coordIn[1]+8, fill="green") #Linea 1
+            elif lineasUsadas[contLineas]==2:
+                canvas.create_oval(coordIn[0]-8, coordIn[1]-8, coordIn[0]+8, coordIn[1]+8, fill="red") #Linea 2
+            else:
+                canvas.create_oval(coordIn[0]-8, coordIn[1]-8, coordIn[0]+8, coordIn[1]+8, fill="blue") #Linea 3
         
         listbox.insert(contaador, al.recorrido[contaador]) #añadimos estacion al recorrido
         contaador += 1
@@ -120,7 +125,12 @@ def showPath(): #Función recursiva para dibujar el camino
         progreso.bind(progresoBarra()) #Avanzamos el progreso de la barra
         canvas.after(300, showPath)
         canvas.create_oval(coordFin[0]-10, coordFin[1]-10, coordFin[0]+10, coordFin[1]+10, fill="black")
-        canvas.create_oval(coordFin[0]-8, coordFin[1]-8, coordFin[0]+8, coordFin[1]+8, fill="white") #Pintamos el punto sel final del tramo
+        if lineasUsadas[contLineas]==1:
+                canvas.create_oval(coordFin[0]-8, coordFin[1]-8, coordFin[0]+8, coordFin[1]+8, fill="green") #Linea 1
+        elif lineasUsadas[contLineas]==2:
+                canvas.create_oval(coordFin[0]-8, coordFin[1]-8, coordFin[0]+8, coordFin[1]+8, fill="red") #Linea2
+        else:
+                canvas.create_oval(coordFin[0]-8, coordFin[1]-8,coordFin[0]+8, coordFin[1]+8, fill="blue")#Linea3
     
 def newWindow():
     global al, canvas, matriz, coordsExtra, criterio, frameInfo, listbox, contaador,progreso,progress,transbordos,lineasUsadas,start
