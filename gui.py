@@ -5,6 +5,8 @@ from PIL import Image
 from PIL import ImageTk
 import csv
 from Algoritmo import Alg
+from datetime import datetime
+import time as tm
 
 def progresoBarra():
     global contaador, al,progress
@@ -70,6 +72,21 @@ def origenDestino (estacion):
                 comboDestino.current(i+1) #Olvidamos temporalmente el boton
         destinoCambiado=True #Indicamos que el destino se ha cambiado
 
+def getHorario(line, wind): #imprimir ventana de los horarios dependiendo de la linea
+    
+    if line == 1:
+        window = Toplevel(wind, width=1362, height=521)
+    elif line == 2:
+        window = Toplevel(wind, width=1083, height=797)
+    else:
+        window = Toplevel(wind, width=1087, height=792)    
+    frame = Frame(window, background='white')
+    horarios = ImageTk.PhotoImage(Image.open('linea' + str(line) + '.png'))
+    make_label(frame, horarios)
+    frame.pack()
+    
+    window.mainloop()
+
 def showPath(): #Función recursiva para dibujar el camino
     global contLineas, al, canvas, coordsExtra, frameInfo, listbox, contaador,progreso,transbordos,lineasUsadas,start
     if(start == True):
@@ -78,9 +95,9 @@ def showPath(): #Función recursiva para dibujar el camino
         contLineas = 0
         destino.set("---Seleccionar Destino---") 
         origen.set("---Seleccionar Origen---") #Reseteamos origen y destino
-        fin = Label(frameInfo, text="¡Buen Viaje!", background="black", font=("Copperplate Gothic Bold", 15))
+        fin = Label(frameInfo, text="¡Buen Viaje!", background="black", font=("Copperplate Gothic Bold", 20))
         fin.configure(fg="white")
-        fin.place(x=80, y=670)
+        fin.place(x=55, y=670)
         listbox.insert(contaador, al.recorrido[contaador])# Añadimos la ultima estación del recorrido
         start=True #Indicamos que la funcion recursiva ha acabado
         return
@@ -140,16 +157,43 @@ def newWindow():
         messagebox.showerror(title="Error", message="No se puede calcular la ruta si alguno de los campos origen o destino esta vacío.") #Mensaje de error
         return
     else:
-        al = Alg(origen.get(), destino.get(), varOpcion.get()) # Llamamos al algoritmo A*
+        lineasAux = [] #array con las lineas del metro
+        with open('lineas.csv', newline='') as File:  
+            reader = csv.reader(File,delimiter=';') # Abrimos y leemos el fichero que contiene las coordenadas
+            for row in reader :
+                lineasAux.append(row)
+                
+        dia = datetime.now().strftime('%A') #dia de la semana para calcular los horarios de los trenes
+        hora = tm.strftime('%H:%M') #hora actual para calcular los horarios de los trenes
+        horaDate = datetime.strptime(hora, '%H:%M')
+        if dia == "Monday" or dia == "Tuesday" or dia == "Wednesday" or dia == "Thursday": #transformamos el valor de dia a nuestro formato
+            dia = 1
+        elif dia == "Friday":
+            dia = 2
+        elif dia == "Saturday":
+            dia = 3
+        elif dia == "Sunday":
+            dia = 4
+        else:
+            print("Error al obtener el dia")
+        
+        al = Alg(origen.get(), destino.get(), varOpcion.get(), dia, horaDate) # Llamamos al algoritmo A*
         al.main() #Inicializamos el algoritmo
         camino = al.getRecorrido() #Recorrido  
-        al.getLineas() 
-        transbordos = al.getTransbordos() #Transbordos
-        lineasUsadas = al.line
-        lineasUnicas = set(lineasUsadas)
+        if al.criterio == "DISTANCIA":
+            al.getLineas() 
+            transbordos = al.getTransbordos() #Transbordos
+        else:
+            transbordos = al.transbordos
+        lineasUsadas = al.line #lineas usadas repetidas
+        lineasUnicas = set(lineasUsadas) #set de lineas usadas unicas
+        lines = [] #lista de lineas usadas unicas
+        for numero in lineasUnicas:
+            lines.append(numero)
         contaador = 0
         #Creamos nueva ventana y  la configuramos
         newWindow = Toplevel(root, width=1000, height=778)
+        newWindow.title("Ruta " + origen.get() + "-" + destino.get())
         newWindow.resizable(FALSE, FALSE)
         #Creamos frame donde aparecerá la ruta
         frameRuta = Frame(newWindow, width=710, height=778, background='white')
@@ -177,28 +221,40 @@ def newWindow():
         boton = Button(frameInfo, height="2", width="12", text="START", font=("Copperplate Gothic Bold", 11), cursor="hand2")
         boton.config(command=lambda:showPath())
         boton.configure(fg="black")
-        boton.place(x=80, y=550)
+        boton.place(x=80, y=590)
         #Label de texto "criterio" 
         criterioMetro = Label(frameInfo, text="Criterio: " + varOpcion.get(), background="black", font=("Copperplate Gothic Bold", 11))
         criterioMetro.configure(fg="white")
-        criterioMetro.place(x=60, y=300)
+        criterioMetro.place(x=60, y=320)
 
         #Label de texto "Distacia y tiempo"
         if(varOpcion.get() == "DISTANCIA"):
             valor = Label(frameInfo, text="Distancia(km): " + str(al.principal), background="black", font=("Copperplate Gothic Bold", 11))
-            valor2 = Label(frameInfo, text="Tiempo(min): " + str(al.secundario), background="black", font=("Copperplate Gothic Bold", 11))
         else:
             valor = Label(frameInfo, text="Tiempo(min): " + str(al.principal), background="black", font=("Copperplate Gothic Bold", 11))
             valor2 = Label(frameInfo, text="Distancia(km): " + str(al.secundario), background="black", font=("Copperplate Gothic Bold", 11))
-        valor.place(x=60, y=320)
-        valor2.place(x=60, y=340)
+            valor2.place(x=60, y=380)
+            valor2.configure(fg="white")
+        valor.place(x=60, y=360)
         valor.configure(fg="white")
-        valor2.configure(fg="white")
         
         #Label texto 
-        lineas = Label(frameInfo, text="Lineas utilizadas: " + str(lineasUnicas), background="black", font=("Copperplate Gothic Bold", 11))
+        lineas = Label(frameInfo, text="Lineas utilizadas: " + str(lines), background="black", font=("Copperplate Gothic Bold", 11))
         lineas.configure(fg="white")
-        lineas.place(x=60, y=360)
+        lineas.place(x=60, y=340)
+        if al.criterio == "TIEMPO":
+            esperaTitle = Label(frameInfo, text="Tiempos espera", background="black", font=("Copperplate Gothic Bold", 13))
+            esperaTitle.configure(fg="white")
+            esperaTitle.place(x=70, y=430)
+            espera = Label(frameInfo, text= origen.get() + ": " + str(al.tiemposEspera[0]) + "(min)", background="black", font=("Copperplate Gothic Bold", 11))
+            espera.configure(fg="white")
+            espera.place(x=40, y=470)
+            suma = 20
+            for x in range (len(transbordos)):
+                esperaAux = Label(frameInfo, text= transbordos[x] + "(min): " + str(al.tiemposEspera[x+1]) + "(min)", background="black", font=("Copperplate Gothic Bold", 11))
+                esperaAux.config(fg="white")
+                esperaAux.place(x=40, y=470 + suma)
+                suma += 20
         #Widgets frameRuta
         #Creamos el lienzo donde se dibujara la ruta
         canvas = Canvas(frameRuta, width=710, height=778, bg='white')
@@ -239,6 +295,24 @@ def confButt():
     for i in range(len(btns)):
         btns[i][1].config(command= lambda i=i: origenDestino(btns[i][0])) #Configuramos el comando de cada botón
 
+def newHorarios(): #ventana para seleccionar la linea
+    window2 = Toplevel(root, width=200, height=200, bg="black")
+    window2.title("Horarios")
+    window2.resizable(FALSE, FALSE)
+    aux = 40
+    for num in range (3):
+        if num == 0:
+            color = "green"
+        elif num == 1:
+            color = "red"
+        else:
+            color = "blue"
+            
+        hor = Button(window2, height="1", width="6", text="Linea " + str(num+1), font=("Copperplate Gothic Bold", 11), cursor="hand2", bg="white", fg = color)
+        hor.config(command=lambda num=num:getHorario(num+1, window2))
+        hor.place(x=60, y=10 + aux)
+        aux += 40
+    window2.mainloop()
 
 #Ventana Principal   
 #Generamos y configuramos la ventana
@@ -296,28 +370,32 @@ destinoCambiado=False
 
 #Botones que se usan para decidir el criterio
 varOpcion.set("DISTANCIA") #Se inicializa a uno de ellos
-Radiobutton(framePr, text="Distancia", width=8,variable=varOpcion, value="DISTANCIA", bg="white",font=("Dolce Vita",11)).place(x=90, y=320)#Criterio: Distancia
-Radiobutton(framePr, text="Tiempo", width=8,variable=varOpcion, value="TIEMPO", bg="white", font=("Dolce Vita",11)).place(x=90, y=380)#Criterio: Tiempo
+crit = Label(framePr, text="Criterio: ", background="black", font=("Copperplate Gothic Bold", 15), fg="white")
+crit.place(x=100, y=270)
+Radiobutton(framePr, text="Distancia", font=("Copperplate Gothic Bold", 11), width=8,variable=varOpcion, value="DISTANCIA", bg="white").place(x=95, y=320)#Criterio: Distancia
+Radiobutton(framePr, text="Tiempo", font=("Copperplate Gothic Bold", 11), width=8,variable=varOpcion, value="TIEMPO", bg="white").place(x=95, y=370)#Criterio: Tiempo
 
-# Boton que abrirá nueva ventana
-Button(framePr ,text = "Calcular Ruta",width=25, height=2,relief="solid",borderwidth = 1,cursor="hand2",command= lambda: newWindow() ).place(x=60, y=450)
-
+# Botones que abrirán nuevas ventanas
+Button(framePr ,text = "Calcular Ruta",width=20, height=2,relief="solid",borderwidth = 1,font=("Copperplate Gothic Bold", 11), bg="black", fg="white", cursor="hand2",command= lambda: newWindow() ).place(x=30, y=570)
+Button(framePr ,text = "Consultar Horarios",width=20, height=1,relief="solid",borderwidth = 1,font=("Copperplate Gothic Bold", 11), bg="green", cursor="hand2",command= lambda: newHorarios(), fg="white").place(x=30, y=480)
 #ComboBox que indicarán la selección del origen y del destino
 valuesOrigen.append("---Seleccionar Origen---")
 valuesDestino.append("---Seleccionar Destino---")
 for i in range (54):
     valuesOrigen.append(btns[i][0])
     valuesDestino.append(btns[i][0]) #Añadimos los valores que tendrán las comboBox 
-comboOrigen= ttk.Combobox(framePr, textvariable = variable1) #Creamos el comboBox Origen
-comboDestino= ttk.Combobox(framePr, textvariable = variable2) #Creamos el comboBox Destino
+comboOrigen= ttk.Combobox(framePr, textvariable = variable1, font=("Copperplate Gothic Bold", 11)) #Creamos el comboBox Origen
+comboDestino= ttk.Combobox(framePr, textvariable = variable2, font=("Copperplate Gothic Bold", 11)) #Creamos el comboBox Destino
 comboOrigen['values'] = valuesOrigen
 comboOrigen['state'] = 'readonly'
 comboOrigen.current(0)#Establecemos valor inicial
 comboDestino['values'] = valuesDestino
 comboDestino['state'] = 'readonly'
 comboDestino.current(0)#Establecemos valor inicial
-comboOrigen.place(x=90, y=200)
-comboDestino.place(x=90, y=230) #Añadimos los comboBox al framePr
+ruta = Label(framePr, text="Ruta: ", font=("Copperplate Gothic Bold", 15), fg="white", bg="black")
+ruta.place(x=130, y=100)
+comboOrigen.place(x=40, y=150)
+comboDestino.place(x=40, y=180) #Añadimos los comboBox al framePr
 comboOrigen.bind('<<ComboboxSelected>>', comboChangedOrigen)
 comboDestino.bind('<<ComboboxSelected>>', comboChangedDestino) #Configuramos lo comandos de los comboBox
 origen.set("---Seleccionar Origen---")

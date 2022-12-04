@@ -2,27 +2,90 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 import json
 import os
 import csv
+from datetime import datetime
+from datetime import timedelta
 
 class Alg():
-    def __init__(self, origen, destino, criterio):
+    
+    
+    def __init__(self, origen, destino, criterio,dia,hora):
         self.criterio= criterio
         self.origen = origen
         self.destino = destino
         self.estacionActual = origen
         self.principal = 0
         self.secundario = 0
+        self.dia = dia
+        self.hora = hora
+        self.frecuencia = 0
+        self.horarios = []
+        self.initGraph()
+        self.lineasMetro=[]
+        self.initLineas()
+        self.initHorarios()
         self.listaAbierta = []
         self.listaCerrada = []
         self.recorrido = []
-        self.initGraph()
         self.lineas = []
         self.line = []
+        self.tiemposEspera = []
+        self.transbordos = []
+    
+    def initLineas(self):
+        with open('lineas.csv', newline='') as File:
+            reader = csv.reader(File,delimiter=';') # Abrimos y leemos el fichero que contiene las coordenadas
+            for row in reader :
+                self.lineasMetro.append(row)
+
+    def time_in_range(self,start, end, x):
+        if start <= end:
+            return start <= x <= end
+        else:
+            return start <= x or x <= end
+    def initFrecuencia(self,estacion,horaES):
+        #linea = self.G.nodes[estacion]['Linea']
+        linea = self.line[self.recorrido.index(estacion)+1]
+        for x in self.horarios[linea-1][self.dia-1]:
+            if self.time_in_range(datetime.strptime(x[0],"%H:%M"),datetime.strptime(x[1],"%H:%M"),horaES):
+                contSuma=0
+                for y in range(len(self.lineasMetro[linea-1])):
+                    if(self.lineasMetro[linea-1][y]==estacion):
+                        break
+                    else:
+                        contSuma+= self.G.edges[self.lineasMetro[linea-1][y],self.lineasMetro[linea-1][y+1]]['TIEMPO']
+                self.horainicio = datetime.strptime(x[0],"%H:%M") + timedelta(0,contSuma*60)
+                #ESTO FALTA  
+                self.frecuencia = round(x[2])
+                break
+    
+    def tiempoEspera(self,hora1, hora2):
+        h1 = hora1
+        h2 = hora2
+        fr = timedelta(0,self.frecuencia*60)
+        if(h1<=h2):
+            resta = h2-h1
+            return (resta.seconds)/60
+        else:
+            resta = h1-h2
+        while(resta>=fr):
+            h2 = h2 + timedelta(0,self.frecuencia*60)
+            resta = h1-h2
+        self.horaSalida = h2
+        return self.frecuencia-((resta.seconds)/60)
+
         
-           
+    def initHorarios(self):
+        for i in range(3) :
+            self.horarios.append([])
+            for j in range(4):
+                self.horarios[i].append([])
+        timetable =self.leer(os.path.abspath("Horarios.json"))
+        for x in timetable:
+            self.horarios[x['Line']-1][x['Dia']-1].append([x['HorarioInicio'],x['HorarioFinal'],x['Frecuencia']])
+
     def getRecorrido(self):
         return self.recorrido
     
@@ -49,8 +112,7 @@ class Alg():
                         if self.recorrido[x-1] == y[0] and self.recorrido[x] == y[1]:
                             self.line.append((int)(y[2]))
                 elif x > 0 and self.lineas[x-1] != 0:
-                    self.line.append(self.lineas[x-1])
-                        
+                    self.line.append(self.lineas[x-1])          
                 else:
                     if self.lineas[x+1] == 0:
                         for y in transbordosAux:
@@ -72,11 +134,22 @@ class Alg():
         self.G.nodes[self.estacionActual]['F']=self.fheuristica(self.estacionActual)
         self.G.nodes[self.estacionActual]['G']=0
         self.G.nodes[self.estacionActual]['Padre']=None
+        self.lineaAct= []
         while(solucionEncontrada == False):
             if(len(self.listaAbierta)<0):
                 print("Error.")
                 return
             self.estacionActual= self.valFMin()
+
+            if self.G.nodes[self.estacionActual]['Linea'] != 0 or self.G.nodes[self.estacionActual]['Padre'] == None:
+                self.lineaAct.append(self.G.nodes[self.estacionActual]['Linea'])
+            elif self.G.nodes[self.estacionActual]['Linea'] == 0 and self.G.nodes[self.G.nodes[self.estacionActual]['Padre']]['Linea'] == 0:
+                transbordosAux = self.transbordosAux()
+                for y in transbordosAux:
+                        if self.G.nodes[self.estacionActual]['Padre'] == y[0] and self.estacionActual == y[1]:
+                            self.lineaAct.append(y[2]) 
+            else:
+                self.lineaAct.append(self.G.nodes[self.G.nodes[self.estacionActual]['Padre']]['Linea'])
             self.listaCerrada.append(self.estacionActual)
 
             self.listaAbierta.remove(self.estacionActual)
@@ -87,17 +160,39 @@ class Alg():
                 for n in sucesores:
                     self.tratarHijo(n,self.estacionActual)
                          
-        
+    def penalizacion(self, hijo, padre): 
+        if self.criterio== "Distancia" or self.lineaAct[self.listaCerrada.index(padre)-1] == 0:
+            return 0
+        else:
+            linea = 0
+            if(self.G.nodes[hijo]['Linea']==0 and self.G.nodes[padre]['Linea']==0):
+                transbordosAux = self.transbordosAux()
+                for y in transbordosAux:
+                        if padre == y[0] and hijo == y[1]:
+                            linea= y[2]
+            else:
+                if(self.G.nodes[hijo]['Linea']==0 and self.G.nodes[padre]['Linea']!=0):
+                    linea = self.G.nodes[padre]['Linea']
+                else:
+                    linea = self.G.nodes[hijo]['Linea']
+            if (int)(linea) != (int)(self.lineaAct[self.listaCerrada.index(padre)-1]):
+                return 5
+            else :
+                return 0
+
+                
+
     def tratarHijo(self, hijo, padre):
+        penalizacion = self.penalizacion(hijo, padre)
         if((hijo in self.listaCerrada)== False):
             if((hijo in self.listaAbierta)== True):
-                if(self.G.nodes[hijo]['G'] > (self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio])):
-                   self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio]
+                if(self.G.nodes[hijo]['G'] > (self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio]) + penalizacion):
+                   self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio] + penalizacion
                    self.calF(hijo)
                    self.G.nodes[hijo]['Padre']= padre
             else:
                 self.listaAbierta.append(hijo)
-                self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio]
+                self.G.nodes[hijo]['G'] = self.G.nodes[padre]['G'] + self.G.edges[hijo,padre][self.criterio] + penalizacion
                 self.calF(hijo)
                 self.G.nodes[hijo]['Padre']= padre
 
@@ -171,12 +266,26 @@ class Alg():
             
     def leer(self, data):
                 with open (data, 'r') as f:
-                    coords = json.load(f)
+                    estructura = json.load(f)
                     f.close()
-                return coords
-
+                return estructura
+    
+    def calcularTiempo(self):
+        self.getLineas()
+        self.transbordos = self.getTransbordos()
+        self.initFrecuencia(self.origen,self.hora)
+        self.principal = self.principal + self.tiempoEspera(self.hora,self.horainicio)
+        self.tiemposEspera.append(self.tiempoEspera(self.hora,self.horainicio))
+        for x in self.transbordos:
+            self.initFrecuencia(x,self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60))
+            self.principal = self.principal + self.tiempoEspera(self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60),self.horainicio)
+            self.tiemposEspera.append(self.tiempoEspera(self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60),self.horainicio))
+        self.principal -= len(self.transbordos)*5
+        
     def main(self):
 
         self.algoritmo()
         self.camino()   
         self.otrosCriterios()
+        if(self.criterio=='TIEMPO'):
+            self.calcularTiempo()
