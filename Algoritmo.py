@@ -73,7 +73,7 @@ class Alg():
         while(resta>=fr):
             h2 = h2 + timedelta(0,self.frecuencia*60)
             resta = h1-h2
-        self.horaSalida = h2
+        self.horaSalida = h1 +  timedelta(0,(self.frecuencia-((resta.seconds)/60)))
         return self.frecuencia-((resta.seconds)/60)
 
         
@@ -161,7 +161,7 @@ class Alg():
                     self.tratarHijo(n,self.estacionActual)
                          
     def penalizacion(self, hijo, padre): 
-        if self.criterio== "Distancia" or self.lineaAct[self.listaCerrada.index(padre)-1] == 0:
+        if self.criterio== "DISTANCIA" or self.lineaAct[self.listaCerrada.index(padre)-1] == 0:
             return 0
         else:
             linea = 0
@@ -175,7 +175,7 @@ class Alg():
                     linea = self.G.nodes[padre]['Linea']
                 else:
                     linea = self.G.nodes[hijo]['Linea']
-            if (int)(linea) != (int)(self.lineaAct[self.listaCerrada.index(padre)-1]):
+            if (int)(linea) != (int)(self.lineaAct[self.listaCerrada.index(padre)]):
                 return 5
             else :
                 return 0
@@ -251,7 +251,7 @@ class Alg():
         while(self.G.nodes[estacion]['Padre'] != None):
             self.recorrido.insert(0,self.G.nodes[estacion]['Padre'])
             estacion = self.G.nodes[estacion]['Padre']
-    
+       
     def otrosCriterios(self):
         x=1
         if(self.criterio == 'TIEMPO'):
@@ -278,9 +278,12 @@ class Alg():
         self.tiemposEspera.append(self.tiempoEspera(self.hora,self.horainicio))
         for x in self.transbordos:
             self.initFrecuencia(x,self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60))
-            self.principal = self.principal + self.tiempoEspera(self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60),self.horainicio)
-            self.tiemposEspera.append(self.tiempoEspera(self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60),self.horainicio))
+            suma= round(self.tiempoEspera(self.horaSalida +timedelta(0,self.G.nodes[x]['G']*60),self.horainicio))
+            self.principal = self.principal + suma
+            self.tiemposEspera.append(suma)
+              
         self.principal -= len(self.transbordos)*5
+    
         
     def main(self):
 

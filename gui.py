@@ -6,6 +6,7 @@ from PIL import ImageTk
 import csv
 from Algoritmo import Alg
 from datetime import datetime
+from datetime import timedelta
 import time as tm
 
 def progresoBarra():
@@ -255,6 +256,12 @@ def newWindow():
                 esperaAux.config(fg="white")
                 esperaAux.place(x=40, y=470 + suma)
                 suma += 20
+            horaSalida =Label(frameInfo, text= "Hora salida: " + str(hora) , background="black", font=("Copperplate Gothic Bold", 11))
+            horaSalida.configure(fg="white")
+            horaSalida.place(x=40, y=530)
+            horaLlegada =Label(frameInfo, text= "Hora llegada: " + (horaDate +  timedelta(0,al.principal*60)).strftime("%H:%M"), background="black", font=("Copperplate Gothic Bold", 11))
+            horaLlegada.configure(fg="white")
+            horaLlegada.place(x=40, y=550)
         #Widgets frameRuta
         #Creamos el lienzo donde se dibujara la ruta
         canvas = Canvas(frameRuta, width=710, height=778, bg='white')
@@ -313,7 +320,9 @@ def newHorarios(): #ventana para seleccionar la linea
         hor.place(x=60, y=10 + aux)
         aux += 40
     window2.mainloop()
-
+def on_closing():
+    if messagebox.showinfo("","Hasta pronto :)"):
+        root.destroy()
 #Ventana Principal   
 #Generamos y configuramos la ventana
 root= Tk()
@@ -419,5 +428,7 @@ with open('coordsAux.csv', newline='') as File:
         matriz[contMatriz].append(row[1])
         matriz[contMatriz].append(coordsAux)
         contMatriz += 1
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 root.mainloop()
